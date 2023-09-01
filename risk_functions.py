@@ -283,3 +283,39 @@ def return_distribution(returns, annot = True):
         ax.legend(fontsize=14, loc='upper left')
 
     
+### Violin plots
+sns.set(style="darkgrid")
+
+def violin_plot(lista_series,lista_names,annot=True):
+        
+    bbox = dict(boxstyle="round", fc="0.8", alpha=0.8)
+
+    # Series list to dataframe
+    lista_series = pd.concat(lista_series,axis=1)
+    lista_series.columns = lista_names
+
+    #sns violinplot
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.violinplot(data=lista_series,ax=ax,inner="quartile",palette="Pastel1")
+    ax.set_title("Return distribution", fontsize=20)
+    ax.set_ylabel("Return", fontsize=16)
+    ax.set_xlabel("Asset", fontsize=16)
+    ax.set_xticklabels(lista_series.columns, fontsize=14)
+    # y tick in percentage 
+    mtick = ticker
+    ax.yaxis.set_major_formatter(mtick.PercentFormatter(1.0))
+
+
+    if annot:
+        # Retornos e vol de cada ativo
+        for i,name in enumerate(lista_names):
+            retorno_i = lista_series[name].mean()
+            vol_i = lista_series[name].std()
+            ax.annotate('  Ret.: {:,.2%} \n  Vol.: {:,.2%}'.format(retorno_i,vol_i)
+                        , xy=(i, 0)
+                        , xytext=(i+0.1, -.1)
+                        , bbox=bbox
+                        )
+
+
